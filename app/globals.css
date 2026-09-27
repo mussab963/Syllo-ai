@@ -1,0 +1,652 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Greta Arabic";
+  src: local("Greta Arabic"), local("GretaArabic");
+  font-display: swap;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-card: var(--card);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
+}
+
+:root {
+  --paper: hsl(220 20% 98%);
+  --ink: hsl(225 24% 10%);
+  --ink-muted: hsl(222 12% 40%);
+  --accent: hsl(231 54% 57%);
+  --accent-foreground: hsl(0 0% 100%);
+  --highlight: hsl(36 100% 64%);
+  --border: hsl(220 14% 90%);
+  --success: hsl(152 39% 34%);
+  --danger: hsl(4 72% 50%);
+  --card: hsl(0 0% 100%);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  /* Greta Arabic is a commercial typeface. If it is installed/licensed on the
+     user's machine, Arabic UI uses it automatically. The fallbacks keep Arabic
+     readable when the font is not available. */
+  :lang(ar),
+  [dir="rtl"],
+  .font-arabic {
+    font-family: "Greta Arabic", "Noto Sans Arabic", Tahoma, Arial, sans-serif;
+    font-feature-settings: normal;
+  }
+
+  ::selection {
+    background: hsl(231 54% 57% / 0.18);
+  }
+}
+
+/* -------- Entrance motion -------- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes soft-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.85; }
+  50% { transform: rotate(12deg) scale(1.16); opacity: 1; }
+}
+
+@keyframes orb-drift-one {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(38px, 26px, 0) scale(1.08); }
+}
+
+@keyframes orb-drift-two {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-42px, -18px, 0) scale(1.12); }
+}
+
+@keyframes ring-pulse {
+  0% { opacity: 0.42; transform: translate(-50%, -50%) scale(0.7); }
+  70%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes file-row-in {
+  from { opacity: 0; transform: translateX(-10px) scale(0.98); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes check-pop {
+  0% { transform: scale(0.4) rotate(-18deg); opacity: 0; }
+  70% { transform: scale(1.18) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-140%) rotate(15deg); }
+  100% { transform: translateX(280%) rotate(15deg); }
+}
+
+.animate-rise-in {
+  animation: rise-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-rise-in-delayed {
+  animation: rise-in 650ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-soft-pop {
+  animation: soft-pop 700ms 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float {
+  animation: float 2.8s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 2.4s ease-in-out infinite;
+}
+
+.animate-check-pop {
+  animation: check-pop 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* -------- Dashboard ambience -------- */
+.ambient-orb {
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+  width: 22rem;
+  height: 22rem;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.22;
+}
+
+.ambient-orb-one {
+  top: -7rem;
+  right: -12rem;
+  background: hsl(231 70% 72%);
+  animation: orb-drift-one 11s ease-in-out infinite;
+}
+
+.ambient-orb-two {
+  top: 28rem;
+  left: -16rem;
+  background: hsl(36 100% 74%);
+  opacity: 0.11;
+  animation: orb-drift-two 13s ease-in-out infinite;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.38;
+  background-image:
+    linear-gradient(to right, hsl(220 14% 88% / 0.55) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(220 14% 88% / 0.55) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to right, transparent, black 58%, black);
+}
+
+.stat-card {
+  opacity: 0;
+  animation: rise-in 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: hsl(231 54% 57% / 0.22);
+  box-shadow: 0 22px 50px -34px hsl(225 24% 10% / 0.34);
+}
+
+.stagger-1 { animation-delay: 80ms; }
+.stagger-2 { animation-delay: 150ms; }
+.stagger-3 { animation-delay: 220ms; }
+
+/* -------- Empty upload card -------- */
+.upload-empty-card {
+  position: relative;
+  transition: border-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
+}
+
+.upload-empty-card::after {
+  content: "";
+  position: absolute;
+  top: -35%;
+  left: -20%;
+  width: 12%;
+  height: 170%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.65), transparent);
+  opacity: 0;
+}
+
+.upload-empty-card:hover {
+  transform: translateY(-3px);
+  border-color: hsl(231 54% 57% / 0.35);
+  box-shadow: 0 28px 70px -50px hsl(225 24% 10% / 0.38);
+}
+
+.upload-empty-card:hover::after {
+  opacity: 1;
+  animation: shimmer 1.15s ease-out;
+}
+
+.upload-rings {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 1px;
+  height: 1px;
+}
+
+.upload-rings span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 88px;
+  height: 88px;
+  border: 1px solid hsl(231 54% 57% / 0.24);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  animation: ring-pulse 2.8s ease-out infinite;
+}
+
+.upload-rings span:nth-child(2) { animation-delay: 0.9s; }
+.upload-rings span:nth-child(3) { animation-delay: 1.8s; }
+
+/* -------- Upload modal -------- */
+.modal-backdrop {
+  animation: modal-backdrop-in 220ms ease-out both;
+}
+
+.modal-panel {
+  animation: modal-panel-in 470ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.drop-zone {
+  position: relative;
+  overflow: hidden;
+  border-color: hsl(220 14% 86%);
+  background:
+    radial-gradient(circle at 50% 0%, hsl(231 54% 57% / 0.08), transparent 45%),
+    hsl(220 20% 98% / 0.72);
+}
+
+.drop-zone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(120deg, transparent 25%, hsl(231 54% 57% / 0.08) 48%, transparent 70%);
+  transform: translateX(-100%);
+  transition: opacity 250ms ease;
+}
+
+.drop-zone:hover {
+  transform: translateY(-2px);
+  border-color: hsl(231 54% 57% / 0.42);
+  background-color: hsl(231 54% 98%);
+  box-shadow: 0 20px 50px -40px hsl(231 54% 57% / 0.65);
+}
+
+.drop-zone:hover::before {
+  opacity: 1;
+  animation: shimmer 1.2s ease-out;
+}
+
+.drop-zone.is-dragging {
+  transform: scale(1.015);
+  border-color: var(--accent);
+  background-color: hsl(231 54% 97%);
+  box-shadow: 0 18px 55px -32px hsl(231 54% 57% / 0.65);
+}
+
+.file-row {
+  opacity: 0;
+  animation: file-row-in 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* -------- Course cards -------- */
+.course-card {
+  opacity: 0;
+  animation: rise-in 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms ease,
+    border-color 320ms ease;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  border-color: hsl(231 54% 57% / 0.22);
+  box-shadow: 0 24px 60px -40px hsl(225 24% 10% / 0.4);
+}
+
+.course-files-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 420ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms ease;
+}
+
+.course-files-grid.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.course-files-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -------- Motion + Three.js premium surface -------- */
+canvas {
+  display: block;
+}
+
+.noise-layer {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.025;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+}
+
+.landing-aurora {
+  pointer-events: none;
+  position: absolute;
+  width: 46rem;
+  height: 46rem;
+  border-radius: 999px;
+  filter: blur(95px);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.landing-aurora-a {
+  right: -13rem;
+  top: -12rem;
+  background: radial-gradient(circle, hsl(231 78% 72% / 0.22), transparent 68%);
+  animation: premium-drift-a 15s ease-in-out infinite;
+}
+
+.landing-aurora-b {
+  left: -20rem;
+  bottom: -23rem;
+  background: radial-gradient(circle, hsl(36 100% 66% / 0.14), transparent 68%);
+  animation: premium-drift-b 18s ease-in-out infinite;
+}
+
+.dashboard-light {
+  pointer-events: none;
+  position: fixed;
+  z-index: -2;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 999px;
+  filter: blur(100px);
+  opacity: 0.18;
+}
+
+.dashboard-light-a {
+  right: -16rem;
+  top: 7rem;
+  background: hsl(231 80% 70%);
+  animation: premium-drift-a 16s ease-in-out infinite;
+}
+
+.dashboard-light-b {
+  left: -20rem;
+  bottom: -10rem;
+  background: hsl(36 100% 70%);
+  opacity: 0.09;
+  animation: premium-drift-b 19s ease-in-out infinite;
+}
+
+.semester-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 22%, hsl(231 80% 72% / 0.1), transparent 29%),
+    radial-gradient(circle at 64% 86%, hsl(36 100% 68% / 0.075), transparent 30%);
+}
+
+.semester-hero::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -40%;
+  opacity: 0.36;
+  background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, hsl(231 80% 75% / 0.12) 48deg, transparent 98deg, transparent 360deg);
+  animation: premium-spin 20s linear infinite;
+}
+
+.drop-zone {
+  position: relative;
+  overflow: hidden;
+  border-color: hsl(220 14% 84%);
+  background:
+    radial-gradient(circle at 50% 0%, hsl(231 54% 57% / 0.09), transparent 45%),
+    hsl(220 20% 98% / 0.76);
+}
+
+.drop-zone::after {
+  content: "";
+  position: absolute;
+  inset: -100% -60%;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(110deg, transparent 38%, hsl(0 0% 100% / 0.8) 50%, transparent 62%);
+  transform: translateX(-45%);
+  transition: opacity 250ms ease;
+}
+
+.drop-zone:hover::after {
+  opacity: 0.7;
+  animation: premium-scan 1.35s ease-out;
+}
+
+@keyframes premium-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(-44px, 38px, 0) scale(1.08); }
+  66% { transform: translate3d(24px, 62px, 0) scale(0.96); }
+}
+
+@keyframes premium-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  40% { transform: translate3d(60px, -35px, 0) scale(1.1); }
+  72% { transform: translate3d(22px, 28px, 0) scale(0.94); }
+}
+
+@keyframes premium-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes premium-scan {
+  0% { transform: translateX(-50%) rotate(0.001deg); }
+  100% { transform: translateX(50%) rotate(0.001deg); }
+}
+
+@media (max-width: 640px) {
+  .landing-aurora {
+    width: 28rem;
+    height: 28rem;
+  }
+
+  .semester-hero {
+    min-height: 390px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-aurora,
+  .dashboard-light,
+  .semester-hero::after {
+    animation: none !important;
+  }
+}
+
+/* -------- SaaS study workspace refinements -------- */
+.focus-noise {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.055;
+  mix-blend-mode: screen;
+  background-image:
+    radial-gradient(circle at 18% 20%, hsl(231 70% 68% / 0.22), transparent 26%),
+    radial-gradient(circle at 82% 80%, hsl(36 100% 64% / 0.09), transparent 30%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: calc(5.8rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-grid {
+    opacity: 0.22;
+    background-size: 28px 28px;
+  }
+
+  .dashboard-light {
+    width: 24rem;
+    height: 24rem;
+    filter: blur(85px);
+  }
+
+  .semester-hero {
+    min-height: 410px;
+  }
+}
+
+/* -------- Syllo AI -------- */
+.ai-hero {
+  isolation: isolate;
+}
+
+.ai-aurora {
+  pointer-events: none;
+  position: absolute;
+  inset: -35% -20% auto auto;
+  width: 36rem;
+  height: 30rem;
+  border-radius: 999px;
+  opacity: 0.5;
+  filter: blur(54px);
+  background:
+    radial-gradient(circle at 28% 38%, hsl(231 85% 74% / 0.55), transparent 38%),
+    radial-gradient(circle at 68% 62%, hsl(36 100% 72% / 0.32), transparent 34%),
+    radial-gradient(circle at 55% 25%, hsl(276 68% 74% / 0.25), transparent 32%);
+  animation: ai-aurora-drift 12s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+.ai-aurora-dark {
+  inset: -60% -5% auto auto;
+  opacity: 0.32;
+  z-index: 0;
+}
+
+@keyframes ai-aurora-drift {
+  0% { transform: translate3d(-3%, 1%, 0) rotate(-5deg) scale(0.96); }
+  50% { transform: translate3d(5%, 5%, 0) rotate(4deg) scale(1.06); }
+  100% { transform: translate3d(-1%, 8%, 0) rotate(-1deg) scale(1.02); }
+}
+
+.ai-markdown > :first-child { margin-top: 0; }
+.ai-markdown > :last-child { margin-bottom: 0; }
+.ai-markdown p { margin: 0.55rem 0; }
+.ai-markdown h1,
+.ai-markdown h2,
+.ai-markdown h3 {
+  margin: 1rem 0 0.45rem;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.ai-markdown h1 { font-size: 1.35rem; }
+.ai-markdown h2 { font-size: 1.2rem; }
+.ai-markdown h3 { font-size: 1.05rem; }
+.ai-markdown ul,
+.ai-markdown ol { margin: 0.55rem 0; padding-left: 1.25rem; }
+.ai-markdown ul { list-style: disc; }
+.ai-markdown ol { list-style: decimal; }
+.ai-markdown li { margin: 0.25rem 0; }
+.ai-markdown strong { font-weight: 700; color: var(--ink); }
+.ai-markdown code {
+  border-radius: 0.45rem;
+  background: hsl(231 54% 57% / 0.08);
+  padding: 0.12rem 0.35rem;
+  font-size: 0.88em;
+}
+.ai-markdown blockquote {
+  margin: 0.8rem 0;
+  border-left: 3px solid hsl(231 54% 57% / 0.38);
+  padding-left: 0.8rem;
+  color: var(--ink-muted);
+}
+.ai-markdown table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.92em; }
+.ai-markdown th,
+.ai-markdown td { border: 1px solid var(--border); padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+.ai-markdown th { background: hsl(231 54% 57% / 0.06); font-weight: 700; }
+
+@media (max-width: 640px) {
+  .ai-aurora {
+    width: 25rem;
+    height: 23rem;
+    inset: -22% -48% auto auto;
+    opacity: 0.4;
+  }
+
+  .ai-markdown table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

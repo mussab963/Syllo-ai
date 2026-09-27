@@ -1,0 +1,22 @@
+SYLLO AI SETUP
+==============
+
+1. Create a file named .env.local in this folder.
+2. Add:
+
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+ANTHROPIC_MODEL=claude-sonnet-5
+
+3. Save the file.
+4. Stop Syllo if it is running (Ctrl+C).
+5. Run:
+
+npm install
+npm run dev
+
+6. Open http://localhost:3000 and go to the AI tab.
+
+Notes:
+- Do NOT name the key NEXT_PUBLIC_ANTHROPIC_API_KEY.
+- Your API key stays server-side in /api/ai.
+- Course files remain in the browser until you intentionally use them with Syllo AI.
